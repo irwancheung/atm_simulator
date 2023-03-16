@@ -12,27 +12,54 @@ class AtmPage extends StatelessWidget {
         actions: [
           BlocBuilder<SettingCubit, SettingState>(
             builder: (context, state) {
-              late final void Function() onPressed;
-              late final IconData icon;
-
-              if (state.theme == AppTheme.light) {
-                icon = Icons.light_mode;
-                onPressed = () => context.read<SettingCubit>().toDarkMode();
-              } else {
-                icon = Icons.dark_mode;
-                onPressed = () => context.read<SettingCubit>().toLightMode();
-              }
+              final setting = context.read<SettingCubit>();
 
               return IconButton(
-                onPressed: onPressed,
-                icon: Icon(icon),
+                onPressed: () => state.theme == AppTheme.light
+                    ? setting.toDarkMode()
+                    : setting.toLightMode(),
+                icon: Icon(
+                  state.theme == AppTheme.light
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
                 iconSize: 30.r,
               );
             },
           ),
         ],
       ),
-      body: SafeArea(child: Container()),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              child: text.body('AAA'),
+            ),
+          ),
+          SizedBox(
+            height: 95.h,
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefix: text.body('\$ '),
+                          border: const UnderlineInputBorder(),
+                          enabledBorder: const UnderlineInputBorder(),
+                          focusedBorder: const UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
