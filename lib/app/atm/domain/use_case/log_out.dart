@@ -11,6 +11,6 @@ class LogOut implements UseCase<Atm, AtmParams> {
 
   @override
   Future<Either<Atm, AppException>> call(AtmParams params) {
-    return repository.logOut(atm: params.atm, command: params.command);
+    return repository.logOut(atm: params.atm);
   }
 }

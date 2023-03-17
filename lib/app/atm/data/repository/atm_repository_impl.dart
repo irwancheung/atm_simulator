@@ -81,12 +81,20 @@ class AtmRepositoryImpl implements AtmRepository {
   }
 
   @override
-  Future<Either<Atm, AppException>> logOut({
-    required String command,
-    required Atm atm,
-  }) {
-    // TODO: implement logOut
-    throw UnimplementedError();
+  Future<Either<Atm, AppException>> logOut({required Atm atm}) async {
+    if (atm.activeCustomer == null) {
+      return right(const AppException(alreadyLoggedOut));
+    }
+
+    final atmModel = atm as AtmModel;
+
+    final newAtm = AtmModel(
+      customers: atmModel.customers,
+      history: atmModel.history,
+      updatedAt: DateTime.now(),
+    );
+
+    return left(newAtm);
   }
 
   @override

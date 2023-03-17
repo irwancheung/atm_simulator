@@ -8,10 +8,7 @@ abstract class AtmRepository {
     required Atm atm,
   });
 
-  Future<Either<Atm, AppException>> logOut({
-    required String command,
-    required Atm atm,
-  });
+  Future<Either<Atm, AppException>> logOut({required Atm atm});
 
   Future<Either<Atm, AppException>> checkBalance({
     required String command,

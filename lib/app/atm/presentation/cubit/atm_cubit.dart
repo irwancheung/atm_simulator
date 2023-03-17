@@ -89,6 +89,7 @@ class AtmCubit extends HydratedCubit<AtmState> {
   }
 
   void _emitState(Either<Atm, AppException> either, String command) {
+    // todo: handle history from left
     either.fold(
       (atm) => emit(AtmState(atm: atm as AtmModel)),
       (e) => _emitAppExceptionState(command),

@@ -25,10 +25,7 @@ void main() {
   test('LogOut should get [Atm] from the repository', () async {
     // Arrange
     when(
-      mockAtmRepository.logOut(
-        command: anyNamed('command'),
-        atm: anyNamed('atm'),
-      ),
+      mockAtmRepository.logOut(atm: anyNamed('atm')),
     ).thenAnswer((_) async => Left(tAtm));
 
     // Act
@@ -36,7 +33,7 @@ void main() {
 
     // Assert
     expect(result, Left(tAtm));
-    verify(mockAtmRepository.logOut(command: 'command', atm: tAtm));
+    verify(mockAtmRepository.logOut(atm: tAtm));
     verifyNoMoreInteractions(mockAtmRepository);
   });
 }
