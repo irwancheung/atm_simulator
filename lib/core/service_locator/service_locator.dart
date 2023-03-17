@@ -35,7 +35,9 @@ Future<void> initServiceLocator() async {
   sl.registerFactory(() => SettingCubit());
 
   //! Repository
-  sl.registerLazySingleton<AtmRepository>(() => AtmRepositoryImpl());
+  sl.registerLazySingleton<AtmRepository>(
+    () => AtmRepositoryImpl(pinEncrypter: sl()),
+  );
 
   //! UseCase
   sl.registerLazySingleton(() => LogIn(repository: sl()));

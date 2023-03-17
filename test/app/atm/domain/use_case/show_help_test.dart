@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'help_test.mocks.dart';
+import 'show_help_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<AtmRepository>()])
 void main() {

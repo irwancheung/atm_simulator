@@ -1,18 +1,83 @@
 import 'package:atm_simulator/app/atm/data/model/atm_model.dart';
+import 'package:atm_simulator/app/atm/data/model/customer_model.dart';
 import 'package:atm_simulator/app/atm/domain/entity/atm.dart';
 import 'package:atm_simulator/app/atm/domain/repository/atm_repository.dart';
 import 'package:atm_simulator/core/exception/app_exception.dart';
-import 'package:atm_simulator/core/service_locator/service_locator.dart';
+import 'package:atm_simulator/core/util/pin_encrypter.dart';
+import 'package:atm_simulator/export.dart';
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 
 class AtmRepositoryImpl implements AtmRepository {
+  final PinEncrypter pinEncrypter;
+
+  const AtmRepositoryImpl({required this.pinEncrypter});
+
   @override
   Future<Either<Atm, AppException>> logIn({
     required String command,
     required Atm atm,
   }) async {
-    // TODO: implement logIn
-    throw UnimplementedError();
+    final commands = command.split(' ');
+
+    if (commands.length != 3) {
+      return right(const AppException(invalidParams));
+    }
+
+    final username = commands[1].toLowerCase();
+    final pin = commands[2];
+
+    if (username.contains(RegExp(r'[^\w\s]'))) {
+      return right(const AppException(invalidUsername));
+    }
+
+    if (int.tryParse(pin) == null) {
+      return right(const AppException(pinMustNumeric));
+    }
+
+    if (pin.length != 6) {
+      return right(const AppException(pinMustSixDigits));
+    }
+
+    if (atm.activeCustomer != null) {
+      return right(const AppException(alreadyLoggedIn));
+    }
+
+    final customer = atm.customers.firstWhereOrNull(
+      (customer) => customer.username == username,
+    );
+
+    if (customer != null) {
+      final matchedPin = pinEncrypter.comparePin(pin, customer.pin);
+
+      if (!matchedPin) {
+        return right(const AppException(pinNotMatch));
+      }
+
+      final newAtm = (atm as AtmModel).copyWith(
+        activeCustomer: customer as CustomerModel,
+        updatedAt: DateTime.now(),
+      );
+
+      return left(newAtm);
+    }
+
+    final newCustomer = CustomerModel(
+      username: username,
+      pin: pinEncrypter.encrypt(pin),
+      balance: 0,
+    );
+
+    final newAtm = (atm as AtmModel).copyWith(
+      customers: [
+        ...atm.customers.map((customer) => customer as CustomerModel),
+        newCustomer
+      ],
+      activeCustomer: newCustomer,
+      updatedAt: DateTime.now(),
+    );
+
+    return left(newAtm);
   }
 
   @override
