@@ -1,4 +1,6 @@
+import 'package:atm_simulator/app/atm/cubit/atm_cubit.dart';
 import 'package:atm_simulator/app/setting/cubit/setting_cubit.dart';
+import 'package:atm_simulator/core/observer/app_bloc_observer.dart';
 import 'package:atm_simulator/core/presentation/theme/theme.dart';
 import 'package:atm_simulator/core/router/router.dart';
 import 'package:atm_simulator/export.dart';
@@ -12,6 +14,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await initServiceLocator();
+
+  Bloc.observer = AppBlocObserver();
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
@@ -28,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => sl<AtmCubit>()),
         BlocProvider(create: (context) => sl<SettingCubit>()),
       ],
       child: ScreenUtilInit(

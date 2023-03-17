@@ -4,13 +4,13 @@ import 'package:atm_simulator/core/exception/app_exception.dart';
 import 'package:atm_simulator/core/use_case/use_case.dart';
 import 'package:dartz/dartz.dart';
 
-class Withdraw implements UseCase<Atm, AtmParams> {
+class ShowHelp implements UseCase<Atm, AtmParams> {
   final AtmRepository repository;
 
-  const Withdraw({required this.repository});
+  const ShowHelp({required this.repository});
 
   @override
   Future<Either<Atm, AppException>> call(AtmParams params) {
-    return repository.withdraw(atm: params.atm, command: params.command);
+    return repository.showHelp(command: params.command, atm: params.atm);
   }
 }
