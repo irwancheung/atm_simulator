@@ -13,6 +13,11 @@ abstract class AtmRepository {
     required Atm atm,
   });
 
+  Future<Either<Atm, AppException>> checkBalance({
+    required String command,
+    required Atm atm,
+  });
+
   Future<Either<Atm, AppException>> deposit({
     required String command,
     required Atm atm,

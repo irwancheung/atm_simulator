@@ -25,6 +25,15 @@ class AtmRepositoryImpl implements AtmRepository {
   }
 
   @override
+  Future<Either<Atm, AppException>> checkBalance({
+    required String command,
+    required Atm atm,
+  }) {
+    // TODO: implement logOut
+    throw UnimplementedError();
+  }
+
+  @override
   Future<Either<Atm, AppException>> deposit({
     required String command,
     required Atm atm,

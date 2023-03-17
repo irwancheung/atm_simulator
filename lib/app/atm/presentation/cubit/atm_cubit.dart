@@ -44,78 +44,48 @@ class AtmCubit extends HydratedCubit<AtmState> {
           ),
         );
 
-  void executeCommand(String command) {
+  Future<void> executeCommand(String command) async {
     final commands = command.split(' ');
     final action = commands.first;
 
     switch (action) {
       case 'login':
-        _executeLogIn(command);
+        final either = await logIn(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'logout':
-        _executeLogOut(command);
+        final either =
+            await logOut(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'deposit':
-        _executeDeposit(command);
+        final either =
+            await deposit(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'withdraw':
-        _executeWithdraw(command);
+        final either =
+            await withdraw(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'transfer':
-        _executeTransfer(command);
+        final either =
+            await transfer(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'help':
-        _executeShowHelp(command);
+        final either =
+            await showHelp(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       case 'clear':
-        _executeClearCommand(command);
+        final either =
+            await clearCommands(AtmParams(command: command, atm: state.atm));
+        _emitState(either, command);
         break;
       default:
         _emitUnknownCommandState(command);
     }
-  }
-
-  Future<void> _executeLogIn(String command) async {
-    final either = await logIn(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeLogOut(String command) async {
-    final either = await logOut(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeDeposit(String command) async {
-    final either = await deposit(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeWithdraw(String command) async {
-    final either = await withdraw(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeTransfer(String command) async {
-    final either = await transfer(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeShowHelp(String command) async {
-    final either = await showHelp(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
-  }
-
-  Future<void> _executeClearCommand(String command) async {
-    final either =
-        await clearCommands(AtmParams(command: command, atm: state.atm));
-
-    _emitState(either, command);
   }
 
   void _emitState(Either<Atm, AppException> either, String command) {
