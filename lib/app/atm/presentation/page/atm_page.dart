@@ -1,4 +1,4 @@
-import 'package:atm_simulator/app/atm/cubit/atm_cubit.dart';
+import 'package:atm_simulator/app/atm/presentation/cubit/atm_cubit.dart';
 import 'package:atm_simulator/app/atm/presentation/widget/command_input_field.dart';
 import 'package:atm_simulator/app/atm/presentation/widget/theme_mode_toggle.dart';
 import 'package:atm_simulator/export.dart';

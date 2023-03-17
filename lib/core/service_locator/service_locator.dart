@@ -1,4 +1,3 @@
-import 'package:atm_simulator/app/atm/cubit/atm_cubit.dart';
 import 'package:atm_simulator/app/atm/data/repository/atm_repository_impl.dart';
 import 'package:atm_simulator/app/atm/domain/repository/atm_repository.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/clear_commands.dart';
@@ -8,7 +7,8 @@ import 'package:atm_simulator/app/atm/domain/use_case/log_out.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/show_help.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/transfer.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/withdraw.dart';
-import 'package:atm_simulator/app/setting/cubit/setting_cubit.dart';
+import 'package:atm_simulator/app/atm/presentation/cubit/atm_cubit.dart';
+import 'package:atm_simulator/app/setting/presentation/cubit/setting_cubit.dart';
 import 'package:atm_simulator/core/presentation/widget/app_text.dart';
 import 'package:atm_simulator/core/util/logger.dart';
 import 'package:atm_simulator/core/util/pin_encrypter.dart';

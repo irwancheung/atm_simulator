@@ -1,4 +1,4 @@
-import 'package:atm_simulator/app/setting/cubit/setting_cubit.dart';
+import 'package:atm_simulator/app/setting/presentation/cubit/setting_cubit.dart';
 import 'package:atm_simulator/export.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

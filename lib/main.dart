@@ -1,5 +1,5 @@
-import 'package:atm_simulator/app/atm/cubit/atm_cubit.dart';
-import 'package:atm_simulator/app/setting/cubit/setting_cubit.dart';
+import 'package:atm_simulator/app/atm/presentation/cubit/atm_cubit.dart';
+import 'package:atm_simulator/app/setting/presentation/cubit/setting_cubit.dart';
 import 'package:atm_simulator/core/observer/app_bloc_observer.dart';
 import 'package:atm_simulator/core/presentation/theme/theme.dart';
 import 'package:atm_simulator/core/router/router.dart';
