@@ -97,6 +97,24 @@ void main() {
     });
 
     test(
+        'should return Right(AppException) with specific message if username length is more than 10 characters or less than 3 characters',
+        () async {
+      // Arrange
+      const tCommand = 'login irwancheung 123456';
+      const tCommand2 = 'login ir 123456';
+      const tMessage = loginUsernameLength;
+      final tAtm = newAtm();
+
+      // Act
+      final result = await repository.logIn(command: tCommand, atm: tAtm);
+      final result2 = await repository.logIn(command: tCommand2, atm: tAtm);
+
+      // Assert
+      expect(result, const Right(AppException(tMessage)));
+      expect(result2, const Right(AppException(tMessage)));
+    });
+
+    test(
         'should return Right(AppException) with specific message if pin is not numeric',
         () async {
       // Arrange

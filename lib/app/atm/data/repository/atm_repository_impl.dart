@@ -36,6 +36,10 @@ class AtmRepositoryImpl implements AtmRepository {
         return right(const AppException(loginInvalidUsername));
       }
 
+      if (username.length < 3 || username.length > 10) {
+        return right(const AppException(loginUsernameLength));
+      }
+
       if (int.tryParse(pin) == null) {
         return right(const AppException(loginPinMustNumeric));
       }

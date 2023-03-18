@@ -2,6 +2,7 @@
 const loginInvalidParams = 'Login failed. Invalid or insufficient parameters.';
 const loginInvalidUsername =
     'Login failed. Username cannot contain spaces and special characters.';
+const loginUsernameLength = 'Login failed. Username must be 3-10 characters.';
 const loginPinMustNumeric = 'Login failed. PIN must be a number.';
 const loginPinMustSixDigits = 'Login failed. PIN must be 6 digits.';
 const loginAlreadyLoggedIn = 'Login failed. Customer already logged in.';
