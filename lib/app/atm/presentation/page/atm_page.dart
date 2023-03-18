@@ -24,12 +24,12 @@ class _AtmPageState extends State<AtmPage> {
     });
   }
 
-  void _onCommandSubmit(String command) {
+  void _onCommandSubmitted(String command) {
     _inputController.clear();
     _inputfocus.requestFocus();
     _scrollToBottom();
 
-    context.read<AtmCubit>().executeCommand(command.trim());
+    context.read<AtmCubit>().executeCommand(command.toLowerCase().trim());
   }
 
   void _scrollToBottom() =>
@@ -97,7 +97,7 @@ class _AtmPageState extends State<AtmPage> {
             CommandInputField(
               controller: _inputController,
               focusNode: _inputfocus,
-              onSubmitted: _onCommandSubmit,
+              onSubmitted: _onCommandSubmitted,
             ),
           ],
         ),

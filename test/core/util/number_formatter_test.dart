@@ -1,4 +1,4 @@
-import 'package:atm_simulator/core/util/number_formatter.dart';
+import 'package:atm_simulator/core/extension/int_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

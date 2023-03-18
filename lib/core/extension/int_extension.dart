@@ -1,4 +1,4 @@
-extension NumberFormatter on int {
+extension IntExtension on int {
   String toDollar() {
     final formattedValue = toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),

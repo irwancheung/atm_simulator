@@ -38,6 +38,10 @@ const transferInvalidAmount =
 const transferInsufficientBalance = 'Transfer failed. Insufficient balance.';
 const transferTargetNotFound = 'Transfer failed. Target customer not found.';
 const transferSameAccount = 'Transfer failed. Cannot transfer to same account.';
+const transferCreditorIsDifferent =
+    'Transfer failed. You still owed %s to another customer, %s';
+const transferDebtorIsDifferent =
+    'Transfer failed. %s still has another debtor.';
 
 // Command failed
 const loginCommandFailed = 'Failed to execute login command.';

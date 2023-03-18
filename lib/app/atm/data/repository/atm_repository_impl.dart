@@ -1,12 +1,16 @@
 import 'package:atm_simulator/app/atm/domain/entity/atm.dart';
+import 'package:atm_simulator/app/atm/domain/entity/creditor.dart';
 import 'package:atm_simulator/app/atm/domain/entity/customer.dart';
+import 'package:atm_simulator/app/atm/domain/entity/debtor.dart';
 import 'package:atm_simulator/app/atm/domain/repository/atm_repository.dart';
 import 'package:atm_simulator/core/exception/app_exception.dart';
-import 'package:atm_simulator/core/util/number_formatter.dart';
+import 'package:atm_simulator/core/extension/int_extension.dart';
+import 'package:atm_simulator/core/extension/string_extension.dart';
 import 'package:atm_simulator/core/util/pin_encrypter.dart';
 import 'package:atm_simulator/export.dart';
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
+import 'package:sprintf/sprintf.dart';
 
 class AtmRepositoryImpl implements AtmRepository {
   final PinEncrypter pinEncrypter;
@@ -62,7 +66,7 @@ class AtmRepositoryImpl implements AtmRepository {
         final updatedHistory = atm.history.toList();
         updatedHistory.addAll([
           '> $command',
-          'Welcome back, ${customer.username}!',
+          'Welcome back, ${customer.username.toSentenceCase()}!',
           'Your balance is : ${customer.balance.toDollar()}',
         ]);
 
@@ -77,7 +81,7 @@ class AtmRepositoryImpl implements AtmRepository {
       final updatedHistory = atm.history.toList();
       updatedHistory.addAll([
         '> $command',
-        'Hello, $username!',
+        'Hello, ${username.toSentenceCase()}!',
         'Your balance is : ${0.toDollar()}',
       ]);
 
@@ -110,7 +114,7 @@ class AtmRepositoryImpl implements AtmRepository {
       final updatedHistory = atm.history.toList();
       updatedHistory.addAll([
         '> logout',
-        'Good bye, ${atm.activeCustomer!.username}!',
+        'Good bye, ${atm.activeCustomer!.username.toSentenceCase()}!',
       ]);
 
       final newAtm = Atm(
@@ -294,11 +298,71 @@ class AtmRepositoryImpl implements AtmRepository {
         return right(const AppException(transferSameAccount));
       }
 
-      if (amount > atm.activeCustomer!.balance) {
-        // todo: handle transfer dengan metode utang
+      final activeCustomer = atm.activeCustomer!;
+
+      if (amount > activeCustomer.balance) {
+        final creditor = activeCustomer.creditor;
+        final debtor = targetCustomer.debtor;
+
+        if (creditor != null && creditor.username != targetUsername) {
+          return right(
+            AppException(
+              sprintf(
+                transferCreditorIsDifferent,
+                [creditor.amount, creditor.username],
+              ),
+            ),
+          );
+        }
+
+        if (debtor != null && debtor.username != activeCustomer.username) {
+          return Right(
+            AppException(
+              sprintf(transferDebtorIsDifferent, [targetUsername]),
+            ),
+          );
+        }
+
+        final remainder = amount - activeCustomer.balance;
+
+        final updatedActiveCustomer = activeCustomer.copyWith(
+          balance: 0,
+          creditor: creditor != null
+              ? creditor.copyWith(amount: creditor.amount + remainder)
+              : Creditor(username: targetUsername, amount: remainder),
+        );
+
+        final updatedTargetCustomer = targetCustomer.copyWith(
+          balance: targetCustomer.balance + activeCustomer.balance,
+          debtor: debtor != null
+              ? debtor.copyWith(amount: debtor.amount + remainder)
+              : Debtor(username: activeCustomer.username, amount: remainder),
+        );
+
+        final updatedCustomers = _updateCustomers(
+          atm.customers,
+          updatedActiveCustomer,
+          updatedTargetCustomer,
+        );
+
+        final updatedHistory = atm.history.toList();
+        updatedHistory.addAll([
+          '> $command',
+          'Transferred ${amount.toDollar()} to ${updatedTargetCustomer.username.toSentenceCase()}',
+          'Your balance now is : ${updatedActiveCustomer.balance.toDollar()}',
+          'You owed ${updatedActiveCustomer.creditor!.amount.toDollar()} to ${updatedTargetCustomer.username.toSentenceCase()}',
+        ]);
+
+        final newAtm = atm.copyWith(
+          activeCustomer: updatedActiveCustomer,
+          customers: updatedCustomers,
+          history: updatedHistory,
+        );
+
+        return left(newAtm);
       }
 
-      final updatedActiveCustomer = atm.activeCustomer!.copyWith(
+      final updatedActiveCustomer = activeCustomer.copyWith(
         balance: atm.activeCustomer!.balance - amount,
       );
 
@@ -315,7 +379,7 @@ class AtmRepositoryImpl implements AtmRepository {
       final updatedHistory = atm.history.toList();
       updatedHistory.addAll([
         '> $command',
-        'Transferred ${amount.toDollar()} to ${updatedTargetCustomer.username}',
+        'Transferred ${amount.toDollar()} to ${updatedTargetCustomer.username.toSentenceCase()}',
         'Your balance now is : ${updatedActiveCustomer.balance.toDollar()}',
       ]);
 

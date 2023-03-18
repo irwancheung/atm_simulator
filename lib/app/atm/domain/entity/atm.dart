@@ -39,7 +39,7 @@ class Atm extends Equatable {
           ? Customer.fromMap(map['activeCustomer'] as Map<String, dynamic>)
           : null,
       customers: List<Customer>.from(
-        (map['customers'] as List<int>).map<Customer>(
+        (map['customers'] as List<dynamic>).map<Customer>(
           (x) => Customer.fromMap(x as Map<String, dynamic>),
         ),
       ),
