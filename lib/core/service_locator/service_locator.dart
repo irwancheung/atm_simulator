@@ -1,5 +1,6 @@
 import 'package:atm_simulator/app/atm/data/repository/atm_repository_impl.dart';
 import 'package:atm_simulator/app/atm/domain/repository/atm_repository.dart';
+import 'package:atm_simulator/app/atm/domain/use_case/check_balance.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/clear_commands.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/deposit.dart';
 import 'package:atm_simulator/app/atm/domain/use_case/log_in.dart';
@@ -24,6 +25,7 @@ Future<void> initServiceLocator() async {
     () => AtmCubit(
       logIn: sl(),
       logOut: sl(),
+      checkBalance: sl(),
       deposit: sl(),
       withdraw: sl(),
       transfer: sl(),
@@ -42,6 +44,7 @@ Future<void> initServiceLocator() async {
   //! UseCase
   sl.registerLazySingleton(() => LogIn(repository: sl()));
   sl.registerLazySingleton(() => LogOut(repository: sl()));
+  sl.registerLazySingleton(() => CheckBalance(repository: sl()));
   sl.registerLazySingleton(() => Deposit(repository: sl()));
   sl.registerLazySingleton(() => Withdraw(repository: sl()));
   sl.registerLazySingleton(() => Transfer(repository: sl()));

@@ -19,8 +19,8 @@ void main() {
     useCase = Transfer(repository: mockAtmRepository);
   });
 
-  final tAtm =
-      Atm(customers: const [], history: const [], updatedAt: DateTime.now());
+  const tAtm = Atm(customers: [], history: []);
+  const tCommand = 'transfer cindy 50000';
 
   test('Transfer should get [Atm] from the repository', () async {
     // Arrange
@@ -29,14 +29,21 @@ void main() {
         command: anyNamed('command'),
         atm: anyNamed('atm'),
       ),
-    ).thenAnswer((_) async => Left(tAtm));
+    ).thenAnswer((_) async => const Left(tAtm));
 
     // Act
-    final result = await useCase(AtmParams(command: 'command', atm: tAtm));
+    final result = await useCase(
+      const AtmParams(
+        command: tCommand,
+        atm: tAtm,
+      ),
+    );
 
     // Assert
-    expect(result, Left(tAtm));
-    verify(mockAtmRepository.transfer(command: 'command', atm: tAtm));
+    expect(result, const Left(tAtm));
+    verify(
+      mockAtmRepository.transfer(command: tCommand, atm: tAtm),
+    );
     verifyNoMoreInteractions(mockAtmRepository);
   });
 }

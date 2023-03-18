@@ -107,18 +107,13 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
         )),
       ) as _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>);
   @override
-  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> checkBalance({
-    required String? command,
-    required _i5.Atm? atm,
-  }) =>
+  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> checkBalance(
+          {required _i5.Atm? atm}) =>
       (super.noSuchMethod(
         Invocation.method(
           #checkBalance,
           [],
-          {
-            #command: command,
-            #atm: atm,
-          },
+          {#atm: atm},
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>.value(
             _FakeEither_0<_i5.Atm, _i6.AppException>(
@@ -126,10 +121,7 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #checkBalance,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
         returnValueForMissingStub:
@@ -139,10 +131,7 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #checkBalance,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>);
@@ -267,18 +256,13 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
         )),
       ) as _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>);
   @override
-  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> showHelp({
-    required String? command,
-    required _i5.Atm? atm,
-  }) =>
+  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> showHelp(
+          {required _i5.Atm? atm}) =>
       (super.noSuchMethod(
         Invocation.method(
           #showHelp,
           [],
-          {
-            #command: command,
-            #atm: atm,
-          },
+          {#atm: atm},
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>.value(
             _FakeEither_0<_i5.Atm, _i6.AppException>(
@@ -286,10 +270,7 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #showHelp,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
         returnValueForMissingStub:
@@ -299,26 +280,18 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #showHelp,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>);
   @override
-  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> clearCommands({
-    required String? command,
-    required _i5.Atm? atm,
-  }) =>
+  _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>> clearCommands(
+          {required _i5.Atm? atm}) =>
       (super.noSuchMethod(
         Invocation.method(
           #clearCommands,
           [],
-          {
-            #command: command,
-            #atm: atm,
-          },
+          {#atm: atm},
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>.value(
             _FakeEither_0<_i5.Atm, _i6.AppException>(
@@ -326,10 +299,7 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #clearCommands,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
         returnValueForMissingStub:
@@ -339,10 +309,7 @@ class MockAtmRepository extends _i1.Mock implements _i3.AtmRepository {
           Invocation.method(
             #clearCommands,
             [],
-            {
-              #command: command,
-              #atm: atm,
-            },
+            {#atm: atm},
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Atm, _i6.AppException>>);

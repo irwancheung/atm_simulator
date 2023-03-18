@@ -11,6 +11,6 @@ class ShowHelp implements UseCase<Atm, AtmParams> {
 
   @override
   Future<Either<Atm, AppException>> call(AtmParams params) {
-    return repository.showHelp(command: params.command, atm: params.atm);
+    return repository.showHelp(atm: params.atm);
   }
 }

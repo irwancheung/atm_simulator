@@ -11,6 +11,6 @@ class ClearCommands implements UseCase<Atm, AtmParams> {
 
   @override
   Future<Either<Atm, AppException>> call(AtmParams params) {
-    return repository.clearCommands(command: params.command, atm: params.atm);
+    return repository.clearCommands(atm: params.atm);
   }
 }

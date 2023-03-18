@@ -16,16 +16,7 @@ void main() {
     repository = AtmRepositoryImpl(pinEncrypter: pinEncrypter);
   });
 
-  group('logOut', () {
-    const tUsername = 'irwan';
-    const tPin = '123456';
-
-    const tCustomer = Customer(
-      username: tUsername,
-      pin: tPin,
-      balance: 1000000,
-    );
-
+  group('checkBalance', () {
     Atm newAtm({
       Customer? activeCustomer,
       List<Customer> customers = const [],
@@ -42,11 +33,11 @@ void main() {
         'should return Right(AppException) with specific message if atm.activeCustomer is null',
         () async {
       // Arrange
-      const tMessage = logoutAlreadyLoggedOut;
       final tAtm = newAtm();
+      const tMessage = balanceNotLoggedIn;
 
       // Act
-      final result = await repository.logOut(atm: tAtm);
+      final result = await repository.checkBalance(atm: tAtm);
 
       // Assert
       expect(result, const Right(AppException(tMessage)));
@@ -54,17 +45,21 @@ void main() {
 
     test('''
 should return Left(Atm) where
-  - atm.activeCustomer is null,
+  - atm.activeCustomer.balance is same as passed atm.activeCustomer.balance argument,
   - atm.customers is same as passed atm.customers argument,
-  - atm.history has 2 new history items,
-  - last history item contains word 'good bye',
-  - second last history item contains word 'logout',
-  if login successfully done''', () async {
+  - atm.history has 2 new history items containing word 'balance',
+  if checkBalance successfully done''', () async {
       // Arrange
-      final tAtm = newAtm(activeCustomer: tCustomer);
+      final tAtm = newAtm(
+        activeCustomer: Customer(
+          username: 'username',
+          pin: pinEncrypter.encrypt('123456'),
+          balance: 10000,
+        ),
+      );
 
       // Act
-      final result = await repository.logOut(atm: tAtm);
+      final result = await repository.checkBalance(atm: tAtm);
 
       // Assert
       expect(result, isA<Left<Atm, AppException>>());
@@ -72,13 +67,13 @@ should return Left(Atm) where
       final left = result as Left<Atm, AppException>;
       final atm = left.value;
 
-      expect(atm.activeCustomer, isNull);
+      expect(atm.activeCustomer!.balance, tAtm.activeCustomer!.balance);
       expect(atm.customers, tAtm.customers);
       expect(atm.history.length, tAtm.history.length + 2);
-      expect(atm.history.last.toLowerCase(), contains('good bye'));
+      expect(atm.history.last.toLowerCase(), contains('balance'));
       expect(
         atm.history[atm.history.length - 2].toLowerCase(),
-        contains('logout'),
+        contains('balance'),
       );
     });
   });

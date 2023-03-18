@@ -19,20 +19,19 @@ void main() {
     useCase = LogOut(repository: mockAtmRepository);
   });
 
-  final tAtm =
-      Atm(customers: const [], history: const [], updatedAt: DateTime.now());
+  const tAtm = Atm(customers: [], history: []);
 
   test('LogOut should get [Atm] from the repository', () async {
     // Arrange
     when(
       mockAtmRepository.logOut(atm: anyNamed('atm')),
-    ).thenAnswer((_) async => Left(tAtm));
+    ).thenAnswer((_) async => const Left(tAtm));
 
     // Act
-    final result = await useCase(AtmParams(command: 'command', atm: tAtm));
+    final result = await useCase(const AtmParams(command: 'logout', atm: tAtm));
 
     // Assert
-    expect(result, Left(tAtm));
+    expect(result, const Left(tAtm));
     verify(mockAtmRepository.logOut(atm: tAtm));
     verifyNoMoreInteractions(mockAtmRepository);
   });

@@ -19,24 +19,20 @@ void main() {
     useCase = ShowHelp(repository: mockAtmRepository);
   });
 
-  final tAtm =
-      Atm(customers: const [], history: const [], updatedAt: DateTime.now());
+  const tAtm = Atm(customers: [], history: []);
 
   test('ShowHelp should get [Atm] from the repository', () async {
     // Arrange
     when(
-      mockAtmRepository.showHelp(
-        command: anyNamed('command'),
-        atm: anyNamed('atm'),
-      ),
-    ).thenAnswer((_) async => Left(tAtm));
+      mockAtmRepository.showHelp(atm: anyNamed('atm')),
+    ).thenAnswer((_) async => const Left(tAtm));
 
     // Act
-    final result = await useCase(AtmParams(command: 'command', atm: tAtm));
+    final result = await useCase(const AtmParams(command: 'help', atm: tAtm));
 
     // Assert
-    expect(result, Left(tAtm));
-    verify(mockAtmRepository.showHelp(command: 'command', atm: tAtm));
+    expect(result, const Left(tAtm));
+    verify(mockAtmRepository.showHelp(atm: tAtm));
     verifyNoMoreInteractions(mockAtmRepository);
   });
 }

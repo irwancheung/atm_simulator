@@ -19,24 +19,21 @@ void main() {
     useCase = CheckBalance(repository: mockAtmRepository);
   });
 
-  final tAtm =
-      Atm(customers: const [], history: const [], updatedAt: DateTime.now());
+  const tAtm = Atm(customers: [], history: []);
 
   test('CheckBalance should get [Atm] from the repository', () async {
     // Arrange
     when(
-      mockAtmRepository.checkBalance(
-        command: anyNamed('command'),
-        atm: anyNamed('atm'),
-      ),
-    ).thenAnswer((_) async => Left(tAtm));
+      mockAtmRepository.checkBalance(atm: anyNamed('atm')),
+    ).thenAnswer((_) async => const Left(tAtm));
 
     // Act
-    final result = await useCase(AtmParams(command: 'command', atm: tAtm));
+    final result =
+        await useCase(const AtmParams(command: 'balance', atm: tAtm));
 
     // Assert
-    expect(result, Left(tAtm));
-    verify(mockAtmRepository.checkBalance(command: 'command', atm: tAtm));
+    expect(result, const Left(tAtm));
+    verify(mockAtmRepository.checkBalance(atm: tAtm));
     verifyNoMoreInteractions(mockAtmRepository);
   });
 }

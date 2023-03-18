@@ -19,24 +19,20 @@ void main() {
     useCase = ClearCommands(repository: mockAtmRepository);
   });
 
-  final tAtm =
-      Atm(customers: const [], history: const [], updatedAt: DateTime.now());
+  const tAtm = Atm(customers: [], history: []);
 
   test('ClearCommands should get [Atm] from the repository', () async {
     // Arrange
     when(
-      mockAtmRepository.clearCommands(
-        command: anyNamed('command'),
-        atm: anyNamed('atm'),
-      ),
-    ).thenAnswer((_) async => Left(tAtm));
+      mockAtmRepository.clearCommands(atm: anyNamed('atm')),
+    ).thenAnswer((_) async => const Left(tAtm));
 
     // Act
-    final result = await useCase(AtmParams(command: 'command', atm: tAtm));
+    final result = await useCase(const AtmParams(command: 'clear', atm: tAtm));
 
     // Assert
-    expect(result, Left(tAtm));
-    verify(mockAtmRepository.clearCommands(command: 'command', atm: tAtm));
+    expect(result, const Left(tAtm));
+    verify(mockAtmRepository.clearCommands(atm: tAtm));
     verifyNoMoreInteractions(mockAtmRepository);
   });
 }

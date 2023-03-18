@@ -10,10 +10,7 @@ abstract class AtmRepository {
 
   Future<Either<Atm, AppException>> logOut({required Atm atm});
 
-  Future<Either<Atm, AppException>> checkBalance({
-    required String command,
-    required Atm atm,
-  });
+  Future<Either<Atm, AppException>> checkBalance({required Atm atm});
 
   Future<Either<Atm, AppException>> deposit({
     required String command,
@@ -30,13 +27,7 @@ abstract class AtmRepository {
     required Atm atm,
   });
 
-  Future<Either<Atm, AppException>> showHelp({
-    required String command,
-    required Atm atm,
-  });
+  Future<Either<Atm, AppException>> showHelp({required Atm atm});
 
-  Future<Either<Atm, AppException>> clearCommands({
-    required String command,
-    required Atm atm,
-  });
+  Future<Either<Atm, AppException>> clearCommands({required Atm atm});
 }

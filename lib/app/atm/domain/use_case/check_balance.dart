@@ -11,6 +11,6 @@ class CheckBalance implements UseCase<Atm, AtmParams> {
 
   @override
   Future<Either<Atm, AppException>> call(AtmParams params) {
-    return repository.checkBalance(command: params.command, atm: params.atm);
+    return repository.checkBalance(atm: params.atm);
   }
 }
