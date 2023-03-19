@@ -44,8 +44,6 @@
 
 ## About The Project
 
----
-
 <p align="center">
     <img src="screenshot/screenshot_1.png" alt="App Screenshot 1" width="300">
     <img src="screenshot/screenshot_2.png" alt="App Screenshot 2" width="300">
@@ -75,8 +73,6 @@ This Flutter application is designed to simulate ATM transactions using Command-
 <p>&nbsp;</p>
 
 ## Getting Started
-
----
 
 ### Prerequisites
 
@@ -108,8 +104,6 @@ This Flutter application is designed to simulate ATM transactions using Command-
 <p>&nbsp;</p>
 
 ## Usage
-
----
 
 ### Log In to Bank Account
 
@@ -263,9 +257,8 @@ Your balance now is $10.
 ```
 
 <p>&nbsp;</p>
-## Contact
 
----
+## Contact
 
 Irwan Chandra - [ic@irwancheung.com](mailto:ic@irwancheung.com)
 
