@@ -29,7 +29,7 @@ class CommandInputField extends StatelessWidget {
                   maxLength: 50,
                   onSubmitted: onSubmitted,
                   decoration: InputDecoration(
-                    hintText: 'Type your command here and press enter.',
+                    hintText: 'Type your command here and press enter...',
                     hintStyle: TextStyle(fontSize: 12.sp),
                     prefix: text.body('\$   '),
                     border: InputBorder.none,

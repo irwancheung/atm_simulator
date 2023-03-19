@@ -63,28 +63,17 @@ class AtmRepositoryImpl implements AtmRepository {
           return right(const AppException(loginPinNotMatch));
         }
 
-        final updatedHistory = atm.history.toList();
+        List<String> updatedHistory = atm.history.toList();
         updatedHistory.addAll([
           '> $command',
           'Welcome back, ${customer.username.toSentenceCase()}!',
           'Your balance is ${customer.balance.toDollar()}.',
         ]);
 
-        if (customer.debtor != null) {
-          final debtor = customer.debtor!;
-
-          updatedHistory.add(
-            'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
-          );
-        }
-
-        if (customer.creditor != null) {
-          final creditor = customer.creditor!;
-
-          updatedHistory.add(
-            'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
-          );
-        }
+        updatedHistory = _setDebtorAndCreditorHistories(
+          customer: customer,
+          history: updatedHistory,
+        );
 
         final newAtm = atm.copyWith(
           activeCustomer: customer,
@@ -154,27 +143,16 @@ class AtmRepositoryImpl implements AtmRepository {
 
       final customer = atm.activeCustomer!;
 
-      final updatedHistory = atm.history.toList();
+      List<String> updatedHistory = atm.history.toList();
       updatedHistory.addAll([
         '> balance',
         'Your balance is ${customer.balance.toDollar()}.',
       ]);
 
-      if (customer.debtor != null) {
-        final debtor = customer.debtor!;
-
-        updatedHistory.add(
-          'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
-        );
-      }
-
-      if (customer.creditor != null) {
-        final creditor = customer.creditor!;
-
-        updatedHistory.add(
-          'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
-        );
-      }
+      updatedHistory = _setDebtorAndCreditorHistories(
+        customer: customer,
+        history: updatedHistory,
+      );
 
       final newAtm = atm.copyWith(history: updatedHistory);
 
@@ -265,7 +243,7 @@ class AtmRepositoryImpl implements AtmRepository {
         updatedTargetCustomer,
       );
 
-      final updatedHistory = atm.history.toList();
+      List<String> updatedHistory = atm.history.toList();
       updatedHistory.add('> $command');
 
       if (totalTransfer > 0) {
@@ -278,21 +256,10 @@ class AtmRepositoryImpl implements AtmRepository {
         'Your balance now is ${updatedActiveCustomer.balance.toDollar()}.',
       );
 
-      if (updatedActiveCustomer.debtor != null) {
-        final debtor = updatedActiveCustomer.debtor!;
-
-        updatedHistory.add(
-          'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
-        );
-      }
-
-      if (updatedActiveCustomer.creditor != null) {
-        final creditor = updatedActiveCustomer.creditor!;
-
-        updatedHistory.add(
-          'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
-        );
-      }
+      updatedHistory = _setDebtorAndCreditorHistories(
+        customer: updatedActiveCustomer,
+        history: updatedHistory,
+      );
 
       final newAtm = atm.copyWith(
         activeCustomer: updatedActiveCustomer,
@@ -344,27 +311,16 @@ class AtmRepositoryImpl implements AtmRepository {
       final updatedCustomers =
           _updateCustomers(atm.customers, updatedActiveCustomer, null);
 
-      final updatedHistory = atm.history.toList();
+      List<String> updatedHistory = atm.history.toList();
       updatedHistory.addAll([
         '> $command',
         'Your balance now is ${updatedActiveCustomer.balance.toDollar()}.',
       ]);
 
-      if (updatedActiveCustomer.debtor != null) {
-        final debtor = updatedActiveCustomer.debtor!;
-
-        updatedHistory.add(
-          'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
-        );
-      }
-
-      if (updatedActiveCustomer.creditor != null) {
-        final creditor = updatedActiveCustomer.creditor!;
-
-        updatedHistory.add(
-          'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
-        );
-      }
+      updatedHistory = _setDebtorAndCreditorHistories(
+        customer: updatedActiveCustomer,
+        history: updatedHistory,
+      );
 
       final newAtm = atm.copyWith(
         activeCustomer: updatedActiveCustomer,
@@ -421,97 +377,40 @@ class AtmRepositoryImpl implements AtmRepository {
       final activeCustomer = atm.activeCustomer!;
       late Customer updatedActiveCustomer;
       Customer? updatedTargetCustomer;
-      int totalTransfer = amount;
+      final totalTransfer = amount;
 
       if (amount > activeCustomer.balance) {
-        final creditor = activeCustomer.creditor;
-        final debtor = targetCustomer.debtor;
-        totalTransfer = activeCustomer.balance;
-
-        if (creditor != null && creditor.username != targetUsername) {
-          return right(
-            AppException(
-              sprintf(
-                transferCreditorIsDifferent,
-                [creditor.amount, creditor.username],
-              ),
-            ),
-          );
-        }
-
-        if (debtor != null && debtor.username != activeCustomer.username) {
-          return Right(
-            AppException(
-              sprintf(transferDebtorIsDifferent, [targetUsername]),
-            ),
-          );
-        }
-
-        final remainder = amount - activeCustomer.balance;
-
-        updatedActiveCustomer = activeCustomer.copyWith(
-          balance: 0,
-          creditor: creditor != null
-              ? creditor.copyWith(amount: creditor.amount + remainder)
-              : Creditor(username: targetUsername, amount: remainder),
+        final newAtm = _handleTransferWithDebtToTarget(
+          command: command,
+          transferAmount: totalTransfer,
+          from: activeCustomer,
+          to: targetCustomer,
+          atm: atm,
         );
 
-        updatedTargetCustomer = targetCustomer.copyWith(
-          balance: targetCustomer.balance + activeCustomer.balance,
-          debtor: debtor != null
-              ? debtor.copyWith(amount: debtor.amount + remainder)
-              : Debtor(username: activeCustomer.username, amount: remainder),
-        );
-      } else if (activeCustomer.debtor != null &&
-          activeCustomer.debtor!.username == targetUsername) {
-        final activeCustomerRemainingBalance = activeCustomer.balance - amount;
-
-        final targetCustomerDebt = activeCustomer.debtor!.amount;
-        final remainder = targetCustomerDebt - amount;
-        totalTransfer = remainder < 0 ? remainder.abs() : 0;
-
-        updatedActiveCustomer = Customer(
-          username: activeCustomer.username,
-          pin: activeCustomer.pin,
-          balance: activeCustomerRemainingBalance > 0
-              ? activeCustomerRemainingBalance
-              : 0,
-          debtor: remainder > 0
-              ? activeCustomer.debtor!.copyWith(amount: remainder)
-              : null,
-          creditor: activeCustomerRemainingBalance < 0
-              ? Creditor(
-                  username: targetUsername,
-                  amount: activeCustomerRemainingBalance.abs(),
-                )
-              : null,
-        );
-
-        updatedTargetCustomer = Customer(
-          username: targetCustomer.username,
-          pin: targetCustomer.pin,
-          balance: remainder >= 0
-              ? targetCustomer.balance + totalTransfer
-              : targetCustomer.balance + amount,
-          creditor: remainder > 0
-              ? targetCustomer.creditor!.copyWith(amount: remainder)
-              : null,
-          debtor: activeCustomerRemainingBalance < 0
-              ? Debtor(
-                  username: activeCustomer.username,
-                  amount: activeCustomerRemainingBalance.abs(),
-                )
-              : null,
-        );
-      } else {
-        updatedActiveCustomer = activeCustomer.copyWith(
-          balance: atm.activeCustomer!.balance - amount,
-        );
-
-        updatedTargetCustomer = targetCustomer.copyWith(
-          balance: targetCustomer.balance + amount,
-        );
+        return left(newAtm);
       }
+
+      if (activeCustomer.debtor != null &&
+          activeCustomer.debtor!.username == targetUsername) {
+        final newAtm = _handleTransferToDebtor(
+          command: command,
+          transferAmount: totalTransfer,
+          from: activeCustomer,
+          to: targetCustomer,
+          atm: atm,
+        );
+
+        return left(newAtm);
+      }
+
+      updatedActiveCustomer = activeCustomer.copyWith(
+        balance: atm.activeCustomer!.balance - amount,
+      );
+
+      updatedTargetCustomer = targetCustomer.copyWith(
+        balance: targetCustomer.balance + amount,
+      );
 
       final updatedCustomers = _updateCustomers(
         atm.customers,
@@ -519,7 +418,7 @@ class AtmRepositoryImpl implements AtmRepository {
         updatedTargetCustomer,
       );
 
-      final updatedHistory = atm.history.toList();
+      List<String> updatedHistory = atm.history.toList();
       updatedHistory.add('> $command');
 
       if (totalTransfer > 0) {
@@ -532,21 +431,10 @@ class AtmRepositoryImpl implements AtmRepository {
         'Your balance now is ${updatedActiveCustomer.balance.toDollar()}.',
       );
 
-      if (updatedActiveCustomer.debtor != null) {
-        final debtor = updatedActiveCustomer.debtor!;
-
-        updatedHistory.add(
-          'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
-        );
-      }
-
-      if (updatedActiveCustomer.creditor != null) {
-        final creditor = updatedActiveCustomer.creditor!;
-
-        updatedHistory.add(
-          'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
-        );
-      }
+      updatedHistory = _setDebtorAndCreditorHistories(
+        customer: updatedActiveCustomer,
+        history: updatedHistory,
+      );
 
       final newAtm = atm.copyWith(
         activeCustomer: updatedActiveCustomer,
@@ -555,6 +443,8 @@ class AtmRepositoryImpl implements AtmRepository {
       );
 
       return left(newAtm);
+    } on AppException catch (e) {
+      return right(e);
     } catch (e, s) {
       logger.e(e, s);
       return right(const AppException(transferCommandFailed));
@@ -574,7 +464,7 @@ Available commands :
 - balance : Check account balance
 - deposit [amount] : Deposit this amount to account
 - withdraw [amount] : Withdraw this amount from account
-- transfer <target> [amount] : Transfer this amount to another account
+- transfer [target] [amount] : Transfer this amount to another account
 - clear : Clear the screen
 - help : Show this help message
 '''
@@ -608,6 +498,186 @@ Available commands :
     }
   }
 
+  Atm _handleTransferWithDebtToTarget({
+    required String command,
+    required int transferAmount,
+    required Customer from,
+    required Customer to,
+    required Atm atm,
+  }) {
+    Debtor? debtor;
+    Creditor? creditor;
+
+    if (from.creditor != null && from.creditor!.username != to.username) {
+      throw AppException(
+        sprintf(
+          transferCreditorIsDifferent,
+          [from.creditor!.amount, from.creditor!.username],
+        ),
+      );
+    }
+
+    if (to.debtor != null && to.debtor!.username != from.username) {
+      throw AppException(
+        sprintf(
+          transferDebtorIsDifferent,
+          [to.username],
+        ),
+      );
+    }
+
+    final debtAmount = transferAmount - from.balance;
+    final remainingTransferAmount = from.balance;
+
+    if (from.creditor == null) {
+      creditor = Creditor(
+        username: to.username,
+        amount: debtAmount,
+      );
+    } else {
+      creditor = from.creditor!.copyWith(
+        amount: from.creditor!.amount + debtAmount,
+      );
+    }
+
+    if (to.debtor == null) {
+      debtor = Debtor(
+        username: from.username,
+        amount: debtAmount,
+      );
+    } else {
+      debtor = to.debtor!.copyWith(
+        amount: to.debtor!.amount + debtAmount,
+      );
+    }
+
+    final updatedFromCustomer = from.copyWith(balance: 0, creditor: creditor);
+
+    final updatedTargetCustomer = to.copyWith(
+      balance: to.balance + remainingTransferAmount,
+      debtor: debtor,
+    );
+
+    final updatedCustomers = _updateCustomers(
+      atm.customers,
+      updatedFromCustomer,
+      updatedTargetCustomer,
+    );
+
+    List<String> updatedHistory = atm.history.toList();
+    updatedHistory.add('> $command');
+
+    if (remainingTransferAmount > 0) {
+      updatedHistory.add(
+        'Transferred ${remainingTransferAmount.toDollar()} to ${updatedTargetCustomer.username.toSentenceCase()}.',
+      );
+    }
+
+    updatedHistory.add(
+      'Your balance now is ${updatedFromCustomer.balance.toDollar()}.',
+    );
+
+    updatedHistory = _setDebtorAndCreditorHistories(
+      customer: updatedFromCustomer,
+      history: updatedHistory,
+    );
+
+    final newAtm = atm.copyWith(
+      activeCustomer: updatedFromCustomer,
+      customers: updatedCustomers,
+      history: updatedHistory,
+    );
+
+    return newAtm;
+  }
+
+  Atm _handleTransferToDebtor({
+    required String command,
+    required int transferAmount,
+    required Customer from,
+    required Customer to,
+    required Atm atm,
+  }) {
+    final fromDebtAmount = from.balance - transferAmount;
+    final fromHasDebt = fromDebtAmount < 0;
+
+    final availableTransferAmount = fromHasDebt ? from.balance : transferAmount;
+
+    final remainingDebtAmount = from.debtor!.amount - availableTransferAmount;
+    final targetHasRemainingDebt = remainingDebtAmount > 0;
+    final noTransferNeeded = remainingDebtAmount == 0;
+
+    late int remainingTransferAmount;
+    if (targetHasRemainingDebt || noTransferNeeded) {
+      remainingTransferAmount = 0;
+    } else {
+      remainingTransferAmount = availableTransferAmount - from.debtor!.amount;
+    }
+
+    final fromDebtor = targetHasRemainingDebt
+        ? from.debtor!.copyWith(amount: remainingDebtAmount)
+        : null;
+
+    final toCreditor = targetHasRemainingDebt
+        ? to.creditor!.copyWith(amount: remainingDebtAmount)
+        : null;
+
+    final updatedFromCustomer = Customer(
+      username: from.username,
+      pin: from.pin,
+      debtor: fromDebtor,
+      balance: targetHasRemainingDebt
+          ? from.balance
+          : from.balance - availableTransferAmount,
+    );
+
+    final updatedTargetCustomer = Customer(
+      username: to.username,
+      pin: to.pin,
+      creditor: toCreditor,
+      balance:
+          noTransferNeeded ? to.balance : to.balance + remainingTransferAmount,
+    );
+
+    final updatedCustomers = _updateCustomers(
+      atm.customers,
+      updatedFromCustomer,
+      updatedTargetCustomer,
+    );
+
+    List<String> updatedHistory = atm.history.toList();
+    updatedHistory.add('> $command');
+
+    if (remainingTransferAmount > 0) {
+      updatedHistory.add(
+        'Transferred ${remainingTransferAmount.toDollar()} to ${updatedTargetCustomer.username.toSentenceCase()}.',
+      );
+    }
+
+    updatedHistory.add(
+      'Your balance now is ${updatedFromCustomer.balance.toDollar()}.',
+    );
+
+    if (fromHasDebt) {
+      updatedHistory.add(
+        'Remaining ${fromDebtAmount.abs().toDollar()} is failed to transfer. Please try again later.',
+      );
+    }
+
+    updatedHistory = _setDebtorAndCreditorHistories(
+      customer: updatedFromCustomer,
+      history: updatedHistory,
+    );
+
+    final newAtm = atm.copyWith(
+      activeCustomer: updatedFromCustomer,
+      customers: updatedCustomers,
+      history: updatedHistory,
+    );
+
+    return newAtm;
+  }
+
   List<Customer> _updateCustomers(
     List<Customer> customers,
     Customer activeCustomer,
@@ -625,5 +695,28 @@ Available commands :
 
       return customer;
     }).toList();
+  }
+
+  List<String> _setDebtorAndCreditorHistories({
+    required Customer customer,
+    required List<String> history,
+  }) {
+    if (customer.debtor != null) {
+      final debtor = customer.debtor!;
+
+      history.add(
+        'Owed ${debtor.amount.toDollar()} from ${debtor.username.toSentenceCase()}.',
+      );
+    }
+
+    if (customer.creditor != null) {
+      final creditor = customer.creditor!;
+
+      history.add(
+        'You owed ${creditor.amount.toDollar()} to ${creditor.username.toSentenceCase()}.',
+      );
+    }
+
+    return history;
   }
 }

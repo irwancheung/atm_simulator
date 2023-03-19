@@ -503,7 +503,7 @@ while targetCustomer is same as debtor should return Left(Atm) where
       final tActiveCustomerPostAct = Customer(
         username: tCustomer1.username,
         pin: tCustomer1.pin,
-        balance: 20000,
+        balance: 0,
       );
 
       final tTargetCustomerPostAct = Customer(
@@ -561,14 +561,10 @@ while targetCustomer is same as debtor should return Left(Atm) where
             .creditor,
         equals(null),
       );
-      expect(atm.history.length, tAtmWithActiveCustomer.history.length + 3);
+      expect(atm.history.length, tAtmWithActiveCustomer.history.length + 2);
       expect(atm.history.last.toLowerCase(), contains('balance now'));
       expect(
         atm.history[atm.history.length - 2].toLowerCase(),
-        contains('transferred'),
-      );
-      expect(
-        atm.history[atm.history.length - 3].toLowerCase(),
         contains(tCommand),
       );
     });

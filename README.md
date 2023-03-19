@@ -68,7 +68,7 @@ This Flutter application is designed to simulate ATM transactions using Command-
 
 ### Built With
 
-- [![Flutter][flutter]][flutter-url]
+[![Flutter][flutter]][flutter-url]
 
 <p>&nbsp;</p>
 
@@ -194,7 +194,7 @@ Available commands :
 
 ```sh
 Welcome to ATM Simulator.
-Please type : `login [username] [pin]` to log in or register new account.
+Please type : 'login [username] [pin]' to log in or register new account.
 ```
 
 ### Debt
