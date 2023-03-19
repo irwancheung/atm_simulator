@@ -41,14 +41,6 @@ void main() {
     );
 
     const tUsername3 = 'nana';
-    const tPin3 = '123456';
-    const tBalance3 = 100000;
-
-    const tCustomer3 = Customer(
-      username: tUsername3,
-      pin: tPin3,
-      balance: tBalance3,
-    );
 
     const tAtm = Atm(
       customers: [tCustomer1, tCustomer2],
@@ -164,11 +156,11 @@ void main() {
 
     test('''
 with amount less than or equal to balance should return Left(Atm) where
-  - atm.activeCustomer is not null,
-  - atm.activeCustomer.balance is decreased by amount,
-  - targetCustomer.balance is increased by amount,
-  - atm.customers is updated with new activeCustomer and new targetCustomer,
-  - atm.history has 3 new history items,
+  - activeCustomer is not null,
+  - activeCustomer.balance is decreased by amount of transfer,
+  - targetCustomer.balance is increased by amount of transfer,
+  - customers is updated with new activeCustomer and new targetCustomer,
+  - history has 3 new history items,
   - last history item contains word 'balance now',
   - second last history item contains word 'transferred',
   - third last history item contains word from command argument,
@@ -275,13 +267,13 @@ with amount less than or equal to balance should return Left(Atm) where
     });
 
     test('''
-with amount less than or equal to balance should return Left(Atm) where
+with amount less than or equal to balance while activeCustomer.creditor and targetCustomer.debtor is null should return Left(Atm) where
   - activeCustomer is not null,
   - all activeCustomer.balance amount is transferred to targetCustomer.balance,
-  - if activeCustomer.creditor is null, then create new creditor with target username and remaining amount,
-  - if targetCustomer.debtor is null, then create new debtor with active username and remaining amount,
-  - atm.customers is updated with new activeCustomer and new targetCustomer,
-  - atm.history has 4 new history items,
+  - create new creditor with target username and remaining amount,
+  - create new debtor with active username and remaining amount,
+  - customers is updated with new activeCustomer and new targetCustomer,
+  - history has 4 new history items,
   - last history item contains word 'owed' and 'to',
   - second last history item contains word 'balance now',
   - third last history item contains word 'transferred',
@@ -350,8 +342,8 @@ with amount less than or equal to balance should return Left(Atm) where
         equals(tTargetCustomer.debtor),
       );
       expect(atm.history.length, tAtmWithActiveCustomer.history.length + 4);
-      expect(atm.history.last.toLowerCase().contains('owed'), true);
-      expect(atm.history.last.toLowerCase().contains('to'), true);
+      expect(atm.history.last.toLowerCase(), contains('owed'));
+      expect(atm.history.last.toLowerCase(), contains('to'));
       expect(
         atm.history[atm.history.length - 2]
             .toLowerCase()
@@ -369,13 +361,13 @@ with amount less than or equal to balance should return Left(Atm) where
     });
 
     test('''
-with amount less than or equal to balance should return Left(Atm) where
+while balance is zero and activeCustomer.creditor and targetCustomer.debtor are not null should return Left(Atm) where
   - activeCustomer is not null,
   - all activeCustomer.balance amount is transferred to targetCustomer.balance,
-  - if activeCustomer.creditor is not null, then update it with latest amount,
-  - if targetCustomer.debtor is not null, then update it with latest amount,
-  - atm.customers is updated with new activeCustomer and new targetCustomer,
-  - atm.history has 4 new history items,
+  - update activeCustomer.creditor with latest amount,
+  - update targetCustomer.debtor with latest amount,
+  - customers is updated with new activeCustomer and new targetCustomer,
+  - history has 4 new history items,
   - last history item contains word 'owed' and 'to',
   - second last history item contains word 'balance now',
   - third last history item contains word 'transferred',
@@ -414,8 +406,9 @@ with amount less than or equal to balance should return Left(Atm) where
       );
 
       final tAtmWithActiveCustomer = tAtm.copyWith(
-          activeCustomer: tActiveCustomerPreAct,
-          customers: [tActiveCustomerPreAct, tTargetCustomerPreAct]);
+        activeCustomer: tActiveCustomerPreAct,
+        customers: [tActiveCustomerPreAct, tTargetCustomerPreAct],
+      );
 
       // Act
       final result = await repository.transfer(
@@ -462,13 +455,11 @@ with amount less than or equal to balance should return Left(Atm) where
         equals(tTargetCustomerPostAct),
       );
       expect(atm.history.length, tAtmWithActiveCustomer.history.length + 4);
-      expect(atm.history.last.toLowerCase().contains('owed'), true);
-      expect(atm.history.last.toLowerCase().contains('to'), true);
+      expect(atm.history.last.toLowerCase(), contains('owed'));
+      expect(atm.history.last.toLowerCase(), contains('to'));
       expect(
-        atm.history[atm.history.length - 2]
-            .toLowerCase()
-            .contains('balance now'),
-        true,
+        atm.history[atm.history.length - 2].toLowerCase(),
+        contains('balance now'),
       );
       expect(
         atm.history[atm.history.length - 3].toLowerCase(),
@@ -476,6 +467,108 @@ with amount less than or equal to balance should return Left(Atm) where
       );
       expect(
         atm.history[atm.history.length - 4].toLowerCase(),
+        contains(tCommand),
+      );
+    });
+
+    test('''
+while targetCustomer is same as debtor should return Left(Atm) where
+  - activeCustomer is not null,
+  - activeCustome.balance is decreased by amount of transfer,
+  - activeCustomer.debtor.amount is decreased by amount of transfer,
+  - targetCustomer.creditor.amount is decreased by amount of transfer,
+  - if activeCustomer.debtor.amount is zero then activeCustomer.debtor is null,
+  - if targetCustomer.creditor.amount is zero then targetCustomer.creditor is null,
+  - customers is updated with new activeCustomer and new targetCustomer,
+  - history has3 to 4 new history items,
+  - If activeCustomer.debtor is not null, then last history item contains word 'owed' and 'from',
+  - If activeCustomer.debtor is null, then last history item contains word 'balance now',
+  - second last history item contains word 'transferred',
+  - third last history item contains word from command argument,
+  if transfer successfully done''', () async {
+      // Arrange
+      const tAmount = 20000;
+      const tCommand = 'transfer $tUsername2 $tAmount';
+
+      final tActiveCustomerPreAct = tCustomer1.copyWith(
+        balance: 20000,
+        debtor: const Debtor(username: tUsername2, amount: 20000),
+      );
+
+      final tTargetCustomerPreAct = tCustomer2.copyWith(
+        balance: 0,
+        creditor: const Creditor(username: tUsername1, amount: 20000),
+      );
+
+      final tActiveCustomerPostAct = Customer(
+        username: tCustomer1.username,
+        pin: tCustomer1.pin,
+        balance: 20000,
+      );
+
+      final tTargetCustomerPostAct = Customer(
+        username: tCustomer2.username,
+        pin: tCustomer2.pin,
+        balance: 0,
+      );
+
+      final tAtmWithActiveCustomer = tAtm.copyWith(
+        activeCustomer: tActiveCustomerPreAct,
+        customers: [tActiveCustomerPreAct, tTargetCustomerPreAct],
+      );
+
+      // Act
+      final result = await repository.transfer(
+        command: tCommand,
+        atm: tAtmWithActiveCustomer,
+      );
+
+      // Assert
+      expect(result, isA<Left<Atm, AppException>>());
+
+      final left = result as Left<Atm, AppException>;
+      final atm = left.value;
+
+      expect(atm.activeCustomer, isNotNull);
+      expect(atm.activeCustomer, equals(tActiveCustomerPostAct));
+      expect(
+        atm.customers.firstWhere(
+          (customer) => customer.username == tActiveCustomerPostAct.username,
+        ),
+        equals(tActiveCustomerPostAct),
+      );
+      expect(
+        atm.customers
+            .firstWhere(
+              (customer) =>
+                  customer.username == tActiveCustomerPostAct.username,
+            )
+            .debtor,
+        equals(null),
+      );
+      expect(
+        atm.customers.firstWhere(
+          (customer) => customer.username == tTargetCustomerPostAct.username,
+        ),
+        equals(tTargetCustomerPostAct),
+      );
+      expect(
+        atm.customers
+            .firstWhere(
+              (customer) =>
+                  customer.username == tTargetCustomerPostAct.username,
+            )
+            .creditor,
+        equals(null),
+      );
+      expect(atm.history.length, tAtmWithActiveCustomer.history.length + 3);
+      expect(atm.history.last.toLowerCase(), contains('balance now'));
+      expect(
+        atm.history[atm.history.length - 2].toLowerCase(),
+        contains('transferred'),
+      );
+      expect(
+        atm.history[atm.history.length - 3].toLowerCase(),
         contains(tCommand),
       );
     });

@@ -30,9 +30,9 @@ void main() {
 
     test('''
 should return Left(Atm) where
-  - atm.activeCustomer is same as passed atm.activeCustomer argument,
-  - atm.customers is same as passed atm.customers argument,
-  - atm.history has 2 new history items,
+  - activeCustomer is same as passed atm.activeCustomer argument,
+  - customers is same as passed atm.customers argument,
+  - history has 2 new history items,
   - last history item contains word 'login' and 'logout' and 'balance' and 'deposit' and 'withdraw' and 'transfer' and 'help' and 'clear',
   - second last history item contains word 'help',
   if clear command successfully done''', () async {

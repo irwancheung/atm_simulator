@@ -54,9 +54,9 @@ void main() {
 
     test('''
 should return Left(Atm) where
-  - atm.activeCustomer is null,
-  - atm.customers is same as passed atm.customers argument,
-  - atm.history has 2 new history items,
+  - activeCustomer is null,
+  - customers is same as passed atm.customers argument,
+  - history has 2 new history items,
   - last history item contains word 'good bye',
   - second last history item contains word 'logout',
   if login successfully done''', () async {

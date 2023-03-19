@@ -30,9 +30,9 @@ void main() {
 
     test('''
 without logged in should return Left(Atm) where
-  - atm.activeCustomer is same as passed atm.activeCustomer argument,
-  - atm.customers is same as passed atm.customers argument,
-  - atm.history length should be 2,
+  - activeCustomer is same as passed atm.activeCustomer argument,
+  - customers is same as passed atm.customers argument,
+  - history length should be 2,
   - last history item contains word 'type',
   - second last history item contains word 'welcome',
   if clear command successfully done''', () async {
@@ -57,9 +57,9 @@ without logged in should return Left(Atm) where
 
     test('''
 when logged in should return Left(Atm) where
-  - atm.activeCustomer is same as passed atm.activeCustomer argument,
-  - atm.customers is same as passed atm.customers argument,
-  - atm.history should be empty,
+  - activeCustomer is same as passed atm.activeCustomer argument,
+  - customers is same as passed atm.customers argument,
+  - history should be empty,
   if clear command successfully done''', () async {
       // Arrange
       final tAtmModel2 = newAtm(

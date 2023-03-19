@@ -122,10 +122,10 @@ void main() {
 
     test('''
 should return Left(Atm) where
-  - atm.activeCustomer is not null,
-  - atm.activeCustomer.balance is decreased by amount,
-  - atm.customers is updated with new activeCustomer,
-  - atm.history has 2 new history items,
+  - activeCustomer is not null,
+  - activeCustomer.balance is decreased by amount,
+  - customers is updated with new activeCustomer,
+  - history has 2 new history items,
   - last history item contains word 'balance now',
   - second last history item contains word from command argument,
   if deposit successfully done''', () async {
