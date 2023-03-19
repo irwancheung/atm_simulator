@@ -81,7 +81,7 @@ class _AtmPageState extends State<AtmPage> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(child: Text(history[index])),
+                                  Expanded(child: text.label(history[index])),
                                 ],
                               ),
                               SizedBox(height: 5.h),

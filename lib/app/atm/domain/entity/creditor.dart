@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
@@ -39,6 +38,5 @@ class Creditor extends Equatable {
       Creditor.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [username, amount];
 }
