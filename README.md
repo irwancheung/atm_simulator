@@ -1,5 +1,3 @@
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 <div align="center">
   <a href="">
     <img src="asset/icon/app_icon.png" alt="Logo" width="80" height="80">
@@ -260,14 +258,17 @@ Your balance now is $10.
 
 ## Contact
 
-Irwan Chandra - [ic@irwancheung.com](mailto:ic@irwancheung.com)
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Github][github-shield]][github-url]
 
 <p>&nbsp;</p>
 
 [app-screenshot-1]: screenshot/screenshot_1.png
 [app-screenshot-2]: 'screenshot/screenshot_2.png'
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-shield]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://linkedin.com/in/irwancheung
+[github-shield]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
+[github-url]: https://github.com/irwancheung
 [flutter]: https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white
 [flutter-url]: https://flutter.dev
 [flutter-install-url]: https://docs.flutter.dev/get-started/install
