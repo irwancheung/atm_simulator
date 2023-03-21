@@ -10,6 +10,7 @@ dependencies:
   bloc_test: ^9.1.1
   collection: ^1.17.0
   crypto: ^3.0.2
+  cupertino_icons: ^1.0.5
   dartz: ^0.10.1
   equatable: ^2.0.5
   flex_color_scheme: ^6.1.2

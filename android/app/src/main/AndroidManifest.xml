@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.atm_simulator">
+    package="com.irwancheung.atm_simulator">
    <application
         android:label="ATM Simulator"
         android:name="${applicationName}"
