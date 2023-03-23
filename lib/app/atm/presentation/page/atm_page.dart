@@ -44,7 +44,7 @@ class _AtmPageState extends State<AtmPage> {
         actions: const [ThemeModeToggle()],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.r),
         child: Column(
           children: [
             Expanded(
@@ -81,7 +81,7 @@ class _AtmPageState extends State<AtmPage> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(child: text.label(history[index])),
+                                  Expanded(child: text.body(history[index])),
                                 ],
                               ),
                               SizedBox(height: 5.h),

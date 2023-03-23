@@ -44,10 +44,13 @@ flutter_icons:
   image_path: "asset/icon/app_icon.png"
   ios: true
   image_path_ios: "asset/icon/app_icon_ios.png"
+  web:
+    generate: true
+    image_path: "asset/icon/app_icon.png"
 
 flutter_native_splash:
   color: "FFFFFF"
   image: "asset/icon/app_icon.png"
   android: true
   ios: true
-  web: false
+  web: true

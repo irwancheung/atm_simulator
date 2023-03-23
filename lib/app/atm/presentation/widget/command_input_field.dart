@@ -1,4 +1,5 @@
 import 'package:atm_simulator/export.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CommandInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -28,9 +29,16 @@ class CommandInputField extends StatelessWidget {
                   autofocus: true,
                   maxLength: 50,
                   onSubmitted: onSubmitted,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.notoSans().fontFamily,
+                    fontSize: 16.sp,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Type your command here and press enter...',
-                    hintStyle: TextStyle(fontSize: 12.sp),
+                    hintStyle: TextStyle(
+                      fontFamily: GoogleFonts.notoSans().fontFamily,
+                      fontSize: 16.sp,
+                    ),
                     prefix: text.body('\$   '),
                     border: InputBorder.none,
                     counterText: '',
