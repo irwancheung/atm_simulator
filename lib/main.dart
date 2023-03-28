@@ -4,11 +4,11 @@ import 'package:atm_simulator/core/observer/app_bloc_observer.dart';
 import 'package:atm_simulator/core/presentation/theme/theme.dart';
 import 'package:atm_simulator/core/router/router.dart';
 import 'package:atm_simulator/export.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
