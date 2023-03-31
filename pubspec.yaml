@@ -33,6 +33,7 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   lint: ^2.0.1
+  patrol: ^1.0.8
 
 flutter:
   uses-material-design: true
