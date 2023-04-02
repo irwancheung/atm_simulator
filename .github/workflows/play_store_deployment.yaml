@@ -38,11 +38,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get version.txt
+        uses: actions/download-artifact@v3
+        with:
+          name: gitversion
+
       - name: Read version
         id: version
         uses: juliangruber/read-file-action@v1
         with:
           path: version.txt
+          trim: true
 
       - name: Update version in YAML
         run: sed -i '' 's/99.99.99+99/${{ steps.version.outputs.content }}/g' pubspec.yaml
