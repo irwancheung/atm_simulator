@@ -15,7 +15,7 @@ jobs:
         with:
           versionSpec: "5.x"
 
-      - name: Use GitVersion
+      - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0
 
@@ -30,6 +30,7 @@ jobs:
 
   build:
     name: Build Appbundle
+    needs: version
     runs-on: macos-latest
     steps:
       - name: Checkout code
