@@ -113,4 +113,4 @@ jobs:
           packageName: com.irwancheung.atm_simulator
           releaseFiles: app-release.aab
           track: internal
-          status: completed
+          status: draft
